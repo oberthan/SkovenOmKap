@@ -1,5 +1,7 @@
 package com.example.skovenomkap
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +19,16 @@ class MainActivity : AppCompatActivity() {
         getSupportActionBar()?.hide()
 
         super.onCreate(savedInstanceState)
+
+        val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val isLoggedIn = prefs.getBoolean("is_logged_in", false)
+
+        if (!isLoggedIn) {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish() // close MainActivity so user can't go "back"
+            return
+        }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

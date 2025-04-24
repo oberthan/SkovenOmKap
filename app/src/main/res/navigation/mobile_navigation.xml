@@ -13,13 +13,13 @@
 
     <fragment
         android:id="@+id/navigation_friends"
-        android:name="com.example.skovenomkap.ui.dashboard.DashboardFragment"
+        android:name="com.example.skovenomkap.ui.dashboard.FriendsFragment"
         android:label="@string/title_friends"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_friends" />
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.example.skovenomkap.ui.notifications.NotificationsFragment"
+        android:name="com.example.skovenomkap.ui.notifications.ProfileFragment"
         android:label="@string/title_profile"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_profile" />
 </navigation>

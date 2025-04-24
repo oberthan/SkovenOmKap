@@ -11,12 +11,6 @@
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_home_black_24dp"
         android:title="@string/title_home" />
-
-    <item
-        android:id="@+id/add_challenge"
-        android:icon="@drawable/baseline_add_24"
-        android:title="Item"
-        android:visible="false" />
     <item
         android:id="@+id/navigation_friends"
         android:icon="@drawable/baseline_supervisor_account_24"
