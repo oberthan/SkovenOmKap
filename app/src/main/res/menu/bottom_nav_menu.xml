@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/baseline_person_24"
+        android:title="@string/title_profile" />
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/title_home" />
+
+    <item
+        android:id="@+id/add_challenge"
+        android:icon="@drawable/baseline_add_24"
+        android:title="Item"
+        android:visible="false" />
+    <item
+        android:id="@+id/navigation_friends"
+        android:icon="@drawable/baseline_supervisor_account_24"
+        android:title="@string/title_friends" />
+
+</menu>
