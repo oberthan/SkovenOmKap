@@ -17,25 +17,38 @@ class LoginActivity : AppCompatActivity() {
         val usernameField = findViewById<EditText>(R.id.editUsername)
         val passwordField = findViewById<EditText>(R.id.editPassword)
         val loginButton = findViewById<Button>(R.id.buttonLogin)
+        val signupButton = findViewById<Button>(R.id.buttonSignup)
+
+
+        val username = usernameField.text.toString()
+        val password = passwordField.text.toString()
 
         loginButton.setOnClickListener {
-            val username = usernameField.text.toString()
-            val password = passwordField.text.toString()
-
             if (username == "admin" && password == "1234") {
-                // Save login state
-                getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-                    .edit() {
-                        putBoolean("is_logged_in", true)
-                    }
-
-                // Navigate to MainActivity
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish()
+                succesful(username)
             } else {
                 Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show()
             }
         }
+        signupButton.setOnClickListener {
+            succesful(username)
+        }
+    }
+    fun succesful(username: String){
+        // Save login state
+        getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+            .edit() {
+                putBoolean("is_logged_in", true)
+            }
+
+        getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+            .edit() {
+                putString("local_user", username)
+            }
+
+        // Navigate to MainActivity
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

@@ -1,12 +1,18 @@
-package com.example.skovenomkap.ui.notifications
+package com.example.skovenomkap.ui.profile
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.skovenomkap.LoginActivity
+import com.example.skovenomkap.R
 import com.example.skovenomkap.databinding.FragmentProfileBinding
 
 class ProfileFragment : Fragment() {
@@ -29,9 +35,11 @@ class ProfileFragment : Fragment() {
         val root: View = binding.root
 
         val textView: TextView = binding.textUsername
-        notificationsViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+//        notificationsViewModel.text.observe(viewLifecycleOwner) {
+//            textView.text = it
+//        }
+            textView.text = this.activity?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)?.getString("local_user", "Username")
+
         return root
     }
 

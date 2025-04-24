@@ -1,4 +1,4 @@
-package com.example.skovenomkap.ui.dashboard
+package com.example.skovenomkap.ui.friends
 
 import android.os.Bundle
 import android.view.LayoutInflater
