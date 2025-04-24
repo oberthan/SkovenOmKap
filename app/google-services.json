@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "605454614689",
+    "project_id": "skovenomkap",
+    "storage_bucket": "skovenomkap.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:605454614689:android:cbd129a60101b0a4a730e0",
+        "android_client_info": {
+          "package_name": "com.example.skovenomkap"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_jV7Snf8hOL-LwYd4TnDcZ9IDYCOLOVw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -10,20 +10,31 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.skovenomkap.databinding.ActivityMainBinding
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    // Get instance of Firebase Auth
+    private lateinit var auth: FirebaseAuth
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         getSupportActionBar()?.hide()
+
+        // Initialize Firebase Auth
+        auth = Firebase.auth
 
         super.onCreate(savedInstanceState)
 
         val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val isLoggedIn = prefs.getBoolean("is_logged_in", false)
 
-        if (!isLoggedIn) {
+        if (auth.currentUser == null ) {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish() // close MainActivity so user can't go "back"
