@@ -13,6 +13,7 @@ import com.example.skovenomkap.databinding.ActivityMainBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,6 +21,9 @@ class MainActivity : AppCompatActivity() {
 
     // Get instance of Firebase Auth
     private lateinit var auth: FirebaseAuth
+
+    // Get a Firestore instance
+    val db = FirebaseFirestore.getInstance()
 
 
 

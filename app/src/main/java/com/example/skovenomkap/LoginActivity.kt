@@ -11,11 +11,15 @@ import androidx.core.content.edit
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginActivity : AppCompatActivity() {
 
     // Get instance of Firebase Auth
     private lateinit var auth: FirebaseAuth
+
+    // Get a Firestore instance
+    val db = FirebaseFirestore.getInstance()
 
 
 
@@ -68,8 +72,23 @@ class LoginActivity : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
-                        val user = auth.currentUser
-                        succesful(user?.email.toString())
+                        val user = auth.currentUser!!
+
+                        val userHash = hashMapOf(
+                            "email" to email,
+                            "username" to email.split("@")[0]
+                        )
+                        db.collection("users")
+                            .document(user.uid)
+                            .set(userHash)
+                            .addOnSuccessListener { documentReference ->
+                                println("DocumentSnapshot added with ID: ")
+                            }
+                            .addOnFailureListener { e ->
+                                println("Error adding document: $e")
+                            }
+
+                        succesful(user.email.toString())
                         // Update UI
                     } else {
                         // If sign in fails, display a message to the user.
@@ -88,7 +107,7 @@ class LoginActivity : AppCompatActivity() {
 
         getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
             .edit() {
-                putString("local_user", username.split("@")[0])
+                putString("local_user", username)
             }
 
         // Navigate to MainActivity
