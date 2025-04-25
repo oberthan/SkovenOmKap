@@ -74,9 +74,10 @@ class LoginActivity : AppCompatActivity() {
                         // Sign in success, update UI with the signed-in user's information
                         val user = auth.currentUser!!
 
+                        val username = email.split("@")[0]
                         val userHash = hashMapOf(
                             "email" to email,
-                            "username" to email.split("@")[0]
+                            "username" to username
                         )
                         db.collection("users")
                             .document(user.uid)
@@ -88,7 +89,7 @@ class LoginActivity : AppCompatActivity() {
                                 println("Error adding document: $e")
                             }
 
-                        succesful(user.email.toString())
+                        succesful(username)
                         // Update UI
                     } else {
                         // If sign in fails, display a message to the user.
