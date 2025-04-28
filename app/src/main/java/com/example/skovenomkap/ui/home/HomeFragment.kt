@@ -17,12 +17,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.util.Calendar
 import java.util.Date
 
 data class Challenge(
     val challengeId: String = "", // Firebase document ID
     val type: String = "", // e.g., "steps", "distance", "time"
-    val status: String = "active", // "active", "finished", "incoming"
+    var status: String = "active", // "active", "finished", "incoming"
     val creatorUid: String = "", // UID of the user who created the challenge
     val participants: List<String> = listOf(), // List of UIDs
     val settings: Map<String, Any> = mapOf(), // Challenge-specific settings (e.g., target steps, distance, time limit)
@@ -70,6 +71,13 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         }
 
+        binding.swipeRefresh.setOnRefreshListener {
+            lifecycleScope.launch {
+                fetchChallenges()
+                binding.swipeRefresh.isRefreshing = false
+            }
+        }
+
         lifecycleScope.launch {
             fetchChallenges()
         }
@@ -91,6 +99,16 @@ class HomeFragment : Fragment() {
                 }
         println(incomingChallenges)
 
+        for (challenge in incomingChallenges) {
+            if (challenge.timestamp < Calendar.getInstance().time) {
+                db.collection("games")
+                    .document(challenge.challengeId)
+                    .update("status", "active")
+
+                challenge.status = "active"
+            }
+        }
+
             // Fetch active challenges where the user is a participant
             val activeChallenges = db.collection("games")
                 .whereArrayContains("participants", currentUserUid)
@@ -102,6 +120,23 @@ class HomeFragment : Fragment() {
                     document.toObject(Challenge::class.java)?.copy(challengeId = document.id)
                 }
         println(activeChallenges)
+        for (challenge in activeChallenges) {
+            if (challenge.type == "goal") {
+
+            } else if (challenge.type == "time") {
+                val challengeLength = challenge.settings["challengeLength"] as? Date
+                if (challengeLength != null) {
+                    if (challengeLength < Calendar.getInstance().time) {
+                        db.collection("games")
+                            .document(challenge.challengeId)
+                            .update("status", "finished")
+                            .await()
+                        challenge.status = "finished"
+                    }
+                }
+            }
+
+        }
 
             // Fetch finished challenges where the user is a participant|
             val finishedChallenges = db.collection("games")
@@ -115,8 +150,8 @@ class HomeFragment : Fragment() {
                 }
 
         challengeList.clear()
-            challengeList.addAll(incomingChallenges)
             challengeList.addAll(activeChallenges)
+            challengeList.addAll(incomingChallenges)
             challengeList.addAll(finishedChallenges)
             challengeAdapter.notifyDataSetChanged()
 

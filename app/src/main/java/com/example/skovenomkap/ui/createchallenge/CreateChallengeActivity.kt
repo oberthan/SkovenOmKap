@@ -3,7 +3,7 @@ package com.example.skovenomkap.ui.createchallenge
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
-import android.widget.TimePicker
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +26,7 @@ class CreateChallengeActivity : AppCompatActivity() {
     private lateinit var friendsAdapter: FriendsAdapter
     private val selectedFriends = mutableListOf<String>()
     private var selectedDateTime: Calendar = Calendar.getInstance()
+    private var endDateTime: Calendar = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +54,26 @@ class CreateChallengeActivity : AppCompatActivity() {
 
         // Start Time Selection
         binding.startTimeEditText.setOnClickListener {
-            showDateTimePicker()
+            showDateTimePicker(binding.startTimeEditText, selectedDateTime)
+        }
+
+        binding.challengeTypeRadioGroup.setOnCheckedChangeListener {group, checkedId ->
+            when(checkedId){
+                R.id.timeChallengeRadioButton -> {
+                    binding.timeChallengeLengthEditText.setOnClickListener {
+                        showDateTimePicker(binding.timeChallengeLengthEditText, endDateTime)
+                    }
+                    binding.timeChallengeLengthEditText.isFocusable = false
+                    binding.settingsTextView.text = "Indtast hvornår spillet skal afsluttes"
+                }
+                R.id.goalChallengeRadioButton -> {
+                    binding.timeChallengeLengthEditText.setOnClickListener(null)
+                    binding.settingsTextView.text = "Indtast hvor mange planter man skal opnå"
+                    binding.timeChallengeLengthEditText.isFocusable = true
+
+                }
+
+            }
         }
 
         //Implement the listeners for the views
@@ -62,7 +82,7 @@ class CreateChallengeActivity : AppCompatActivity() {
         }
     }
 
-    private fun showDateTimePicker() {
+    private fun showDateTimePicker(EditText: TextView, dateTime: Calendar) {
         val currentDateTime = Calendar.getInstance()
         val startYear = currentDateTime.get(Calendar.YEAR)
         val startMonth = currentDateTime.get(Calendar.MONTH)
@@ -72,17 +92,17 @@ class CreateChallengeActivity : AppCompatActivity() {
 
         DatePickerDialog(this, { _, year, month, day ->
             TimePickerDialog(this, { _, hour, minute ->
-                selectedDateTime.set(year, month, day, hour, minute)
-                updateDateTimeText()
+                dateTime.set(year, month, day, hour, minute)
+                updateDateTimeText(EditText, dateTime)
             }, startHour, startMinute, false).show()
         }, startYear, startMonth, startDay).show()
     }
 
-    private fun updateDateTimeText() {
+    private fun updateDateTimeText(EditText: TextView, dateTime: Calendar) {
         val dateFormat = android.text.format.DateFormat.getDateFormat(this)
         val timeFormat = android.text.format.DateFormat.getTimeFormat(this)
-        val formattedDateTime = dateFormat.format(selectedDateTime.time) + " " + timeFormat.format(selectedDateTime.time)
-        binding.startTimeEditText.setText(formattedDateTime)
+        val formattedDateTime = dateFormat.format(dateTime.time) + " " + timeFormat.format(dateTime.time)
+        EditText.text = formattedDateTime
     }
 
     private fun createChallenge() {
@@ -102,7 +122,7 @@ class CreateChallengeActivity : AppCompatActivity() {
         when (challengeType) {
             "time" -> {
                 val challengeLengthString = binding.timeChallengeLengthEditText.text.toString()
-                val challengeLength = challengeLengthString.toIntOrNull()
+                val challengeLength = endDateTime.time
                 if (challengeLength == null) {
                     Toast.makeText(this, "Invalid challenge length", Toast.LENGTH_SHORT).show()
                     return
@@ -110,7 +130,7 @@ class CreateChallengeActivity : AppCompatActivity() {
                 settings["challengeLength"] = challengeLength
             }
             "goal" -> {
-                val goalString = binding.goalChallengeGoalEditText.text.toString()
+                val goalString = binding.timeChallengeLengthEditText.text.toString()
                 val goal = goalString.toIntOrNull()
                 if (goal == null) {
                     Toast.makeText(this, "Invalid goal", Toast.LENGTH_SHORT).show()
@@ -128,7 +148,7 @@ class CreateChallengeActivity : AppCompatActivity() {
             participants = selectedFriends + currentUserUid,
             settings = settings,
             timestamp = startTime,
-            status = "active"
+            status = "incoming"
         )
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -178,7 +198,7 @@ data class Challenge(
     val participants: List<String> = listOf(),
     val settings: Map<String, Any> = mapOf(),
     val timestamp: Date = Date(),
-    val status: String = "active"
+    val status: String = "incoming"
 )
 
 data class Friend(val uid: String, val username: String)

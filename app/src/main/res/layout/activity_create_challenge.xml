@@ -30,20 +30,20 @@
                 android:id="@+id/timeChallengeRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Time Challenge" />
+                android:text="På tid" />
 
             <RadioButton
                 android:id="@+id/goalChallengeRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Goal Challenge" />
+                android:text="Opnå målet" />
         </RadioGroup>
 
         <!-- Common Settings -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Opponents:"
+            android:text="Modstandere:"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -54,30 +54,33 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Start Time:"
+            android:text="Starttidspunkt:"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <EditText
+        <TextView
             android:id="@+id/startTimeEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter Start Time (YYYY-MM-DD HH:MM)"/>
+            android:hint="Klik for at ændre starttidspunkt"/>
 
         <!-- Time Challenge Specific Settings -->
         <TextView
+            android:id="@+id/settingsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Challenge Length (minutes):"
+            android:text="Du skal vælge en type først!"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <EditText
             android:id="@+id/timeChallengeLengthEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter Challenge Length (minutes)"
+            android:editable="false"
+            android:hint=""
             android:inputType="number" />
 
-        <!-- Goal Challenge Specific Settings -->
+<!--
+        &lt;!&ndash; Goal Challenge Specific Settings &ndash;&gt;
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -90,6 +93,7 @@
             android:layout_height="wrap_content"
             android:hint="Enter Goal"
             android:inputType="number" />
+-->
 
         <!-- Create Challenge Button -->
         <Button
