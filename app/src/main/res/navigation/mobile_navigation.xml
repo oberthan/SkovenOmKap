@@ -12,6 +12,11 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
+        android:id="@+id/navigation_camera"
+        android:name="com.example.skovenomkap.ui.CameraFragment"
+        android:label="@string/title_camera"
+        tools:layout="@layout/fragment_camera" />
+    <fragment
         android:id="@+id/navigation_friends"
         android:name="com.example.skovenomkap.ui.friends.FriendsFragment"
         android:label="@string/title_friends"
