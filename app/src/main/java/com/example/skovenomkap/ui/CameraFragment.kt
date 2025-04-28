@@ -20,6 +20,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.example.skovenomkap.FirebaseHelper
 import com.example.skovenomkap.R
 import com.example.skovenomkap.databinding.FragmentCameraBinding
 import okhttp3.*
@@ -174,12 +175,26 @@ class CameraFragment : Fragment() {
                 val responseBody = response.body?.string()
                 Log.d(TAG, "PlantNet API response: $responseBody")
                 showSuccessToast("PlantNet API request succeeded!")
-                // TODO: Parse the JSON response and display the results
+
                 val jsonObject = responseBody?.let { JSONObject(it) }
 
-                val bestMatch = jsonObject?.getString("bestMatch")
-                showSuccessToast(bestMatch.toString())
+                // 1. Access the "results" array
+                val resultsArray = jsonObject?.getJSONArray("results")
 
+                // 2. Get the first object in the "results" array
+                val firstResult = resultsArray?.getJSONObject(0)
+
+                // 3. Access the "species" object
+                val speciesObject = firstResult?.getJSONObject("species")
+
+                // 4. Access the "genus" object
+                val genusObject = speciesObject?.getJSONObject("genus")
+
+                // 5. Finally, get the "scientificNameWithoutAuthor" from the "genus" object
+                val genusScientificName = genusObject?.getString("scientificNameWithoutAuthor")
+                showSuccessToast(genusScientificName.toString())
+
+                FirebaseHelper.updatePlant(genusScientificName.toString())
             }
         } catch (e: IOException) {
             Log.e(TAG, "Error sending image to PlantNet API: ${e.message}", e)
