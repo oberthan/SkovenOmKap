@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@id/navigation_home">
 
     <fragment
         android:id="@+id/navigation_home"
@@ -15,7 +15,36 @@
         android:id="@+id/navigation_camera"
         android:name="com.example.skovenomkap.ui.CameraFragment"
         android:label="@string/title_camera"
-        tools:layout="@layout/fragment_camera" />
+        tools:layout="@layout/fragment_camera" >
+        <action
+            android:id="@+id/action_navigation_camera_to_navigation_confirmation"
+            app:destination="@id/navigation_confirmation" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_confirmation"
+        android:name="com.example.skovenomkap.ui.ConfirmationFragment"
+        android:label="Brug dette billede?"
+        tools:layout="@layout/fragment_confirmation">
+        <argument
+            android:name="imageUri"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_navigation_confirmation_to_navigation_photo_report"
+            app:destination="@id/navigation_photo_report"/>
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_photo_report"
+        android:name="com.example.skovenomkap.ui.PhotoReportFragment"
+        android:label="Plante"
+        tools:layout="@layout/fragment_photo_report">
+        <argument
+            android:name="imageUri"
+            app:argType="string" />
+        <!--        <action
+                    android:id="@+id/action_navigation_photo_report_to_navigation_home"
+                    app:destination="@id/navigation_home"
+                    app:popUpTo="@id/navigation_home" />-->
+    </fragment>
     <fragment
         android:id="@+id/navigation_friends"
         android:name="com.example.skovenomkap.ui.friends.FriendsFragment"

@@ -20,9 +20,11 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.skovenomkap.FirebaseHelper
 import com.example.skovenomkap.R
 import com.example.skovenomkap.databinding.FragmentCameraBinding
+//import com.example.skovenomkap.ui.CameraFragmentDirections
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -135,7 +137,14 @@ class CameraFragment : Fragment() {
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     val savedUri = output.savedUri ?: return
-                    val imagePath = getPathFromUri(savedUri)
+                    Log.d(TAG, "Photo capture succeeded: $savedUri")
+
+                    val bundle = Bundle().apply {
+                        putString("imageUri", savedUri.toString())
+                    }
+                    findNavController().navigate(R.id.navigation_confirmation, bundle)
+
+/*                    val imagePath = getPathFromUri(savedUri)
 
                     if (imagePath != null) {
                         val imageFile = File(imagePath)
@@ -144,7 +153,7 @@ class CameraFragment : Fragment() {
                         }
                     } else {
                         Log.e(TAG, "Could not resolve file path from URI: $savedUri")
-                    }
+                    }*/
                 }
             }
         )
