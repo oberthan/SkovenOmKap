@@ -7,8 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.skovenomkap.R
 import com.example.skovenomkap.ui.home.Challenge
 
-class ChallengeAdapter(private val challengeList: List<Challenge>) :
-    RecyclerView.Adapter<ChallengeAdapter.ChallengeViewHolder>() {
+class ChallengeAdapter(
+        private val challengeList: List<Challenge>,
+        private val onClick: (Challenge) -> Unit
+    ) : RecyclerView.Adapter<ChallengeAdapter.ChallengeViewHolder>() {
 
     class ChallengeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val challengeTypeTextView: TextView = itemView.findViewById(R.id.challengeTypeTextView)
@@ -26,7 +28,10 @@ class ChallengeAdapter(private val challengeList: List<Challenge>) :
         val currentItem = challengeList[position]
         holder.challengeTypeTextView.text = currentItem.type
         holder.challengeStatusTextView.text = currentItem.status
-        // Bind more data to the views
+        holder.itemView.setOnClickListener {
+            onClick(currentItem)
+        }
+    // Bind more data to the views
     }
 
     override fun getItemCount(): Int {

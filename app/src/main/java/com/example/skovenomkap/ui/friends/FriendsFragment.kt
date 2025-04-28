@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.skovenomkap.FirebaseHelper
 import com.example.skovenomkap.databinding.FragmentFriendsBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -131,7 +132,8 @@ class FriendsFragment : Fragment() {
 
     private suspend fun fetchAllUsers() {
         try {
-            val querySnapshot = db.collection("users").get().await()
+//            val querySnapshot = db.collection("users").get().await()
+            val querySnapshot = FirebaseHelper.getUsers()!!
             allUsers = querySnapshot.documents.map { document ->
                 User(document.id, document.getString("username") ?: "No Username")
             }

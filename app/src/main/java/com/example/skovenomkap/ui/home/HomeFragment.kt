@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.skovenomkap.ChallengeDetailActivity
 import com.example.skovenomkap.ui.createchallenge.CreateChallengeActivity
 import com.example.skovenomkap.databinding.FragmentHomeBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -51,7 +52,14 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        challengeAdapter = ChallengeAdapter(challengeList)
+        challengeAdapter = ChallengeAdapter(challengeList) { challenge ->
+            val intent = Intent(requireContext(), ChallengeDetailActivity::class.java).apply {
+                putExtra("challengeId", challenge.challengeId)
+            }
+            startActivity(intent)
+        }
+
+
         binding.recyclerViewChallenges.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = challengeAdapter
