@@ -1,6 +1,6 @@
 package com.example.skovenomkap.ui.home
 
-import ChallengeAdapter
+import UdfordringsAdapter
 import android.content.Intent
 import android.os.Bundle
 import android.util.Pair
@@ -28,14 +28,14 @@ import kotlinx.coroutines.tasks.await
 import java.util.Calendar
 import java.util.Date
 
-data class Challenge(
+data class Udfordrings(
     val challengeId: String = "", // Firebase document ID
-    val type: String = "", // e.g., "steps", "distance", "time"
-    var status: String = "active", // "active", "finished", "incoming"
+    val type: String = "", // e.g., "steps", "distance", "Tid"
+    var status: String = "Aktiv", // "Aktiv", "Slut", "Kommende"
     val creatorUid: String = "", // UID of the user who created the challenge
     val participants: List<String> = listOf(), // List of UIDs
-    val settings: Map<String, Any> = mapOf(), // Challenge-specific settings (e.g., target steps, distance, time limit)
-    val winner: String = "", // Challenge-specific results(e.g., steps taken, distance run, time spent)
+    val settings: Map<String, Any> = mapOf(), // Udfordrings-specific settings (e.g., target steps, distance, time limit)
+    val winner: String = "", // Udfordrings-specific results(e.g., steps taken, distance run, time spent)
     val timestamp: Date = Date(), // Timestamp of when the challenge was created
 )
 
@@ -46,8 +46,8 @@ class HomeFragment : Fragment() {
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
-    private val challengeList = mutableListOf<Challenge>()
-    private lateinit var challengeAdapter: ChallengeAdapter
+    private val challengeList = mutableListOf<Udfordrings>()
+    private lateinit var challengeAdapter: UdfordringsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,7 +61,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        challengeAdapter = ChallengeAdapter(challengeList) { challenge ->
+        challengeAdapter = UdfordringsAdapter(challengeList) { challenge ->
             val intent = Intent(requireContext(), ChallengeDetailActivity::class.java).apply {
                 putExtra("challengeId", challenge.challengeId)
             }
@@ -69,83 +69,83 @@ class HomeFragment : Fragment() {
         }
 
 
-        binding.recyclerViewChallenges.apply {
+        binding.recyclerViewUdfordringss.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = challengeAdapter
         }
 
-        binding.createChallengeButton.setOnClickListener {
+        binding.createUdfordringsButton.setOnClickListener {
             val intent = Intent(requireContext(), CreateChallengeActivity::class.java)
             startActivity(intent)
         }
 
         binding.swipeRefresh.setOnRefreshListener {
             lifecycleScope.launch {
-                fetchChallenges()
+                fetchUdfordringss()
                 binding.swipeRefresh.isRefreshing = false
             }
         }
 
         lifecycleScope.launch {
-            fetchChallenges()
+            fetchUdfordringss()
         }
     }
 
-    private suspend fun fetchChallenges() {
+    private suspend fun fetchUdfordringss() {
         val currentUserUid = auth.currentUser?.uid ?: return
 
 //        try {
-//            // Fetch incoming challenges
-            val incomingChallenges = db.collection("games")
+//            // Fetch Kommende challenges
+            val KommendeUdfordringss = db.collection("games")
                 .whereArrayContains("participants", currentUserUid)
-                .whereEqualTo("status", "incoming")
+                .whereEqualTo("status", "Kommende")
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .await()
                 .documents.mapNotNull { document ->
-                    document.toObject(Challenge::class.java)?.copy(challengeId = document.id)
+                    document.toObject(Udfordrings::class.java)?.copy(challengeId = document.id)
                 }
-        println(incomingChallenges)
+        println(KommendeUdfordringss)
 
-        for (challenge in incomingChallenges) {
+        for (challenge in KommendeUdfordringss) {
             if (challenge.timestamp < Calendar.getInstance().time) {
                 db.collection("games")
                     .document(challenge.challengeId)
-                    .update("status", "active")
+                    .update("status", "Aktiv")
 
-                challenge.status = "active"
+                challenge.status = "Aktiv"
             }
         }
 
-            // Fetch active challenges where the user is a participant
-            val activeChallenges = db.collection("games")
+            // Fetch Aktiv challenges where the user is a participant
+            val AktivUdfordringss = db.collection("games")
                 .whereArrayContains("participants", currentUserUid)
-                .whereEqualTo("status", "active")
+                .whereEqualTo("status", "Aktiv")
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .await()
                 .documents.mapNotNull { document ->
-                    document.toObject(Challenge::class.java)?.copy(challengeId = document.id)
+                    document.toObject(Udfordrings::class.java)?.copy(challengeId = document.id)
                 }
-        println(activeChallenges)
-        for (challenge in activeChallenges) {
-            if (challenge.type == "goal") {
+        println(AktivUdfordringss)
+        for (challenge in AktivUdfordringss) {
+            if (challenge.type == "mål") {
                 val lead = leading(challenge)
                 if (lead != null) {
-                    if (lead.value >= challenge.settings["goal"] as Long) {
+                    if (lead.value >= challenge.settings["mål"] as Long) {
                         db.collection("games")
                             .document(challenge.challengeId)
                             .set(
                                 hashMapOf<String, Any>(
-                                    "status" to "finished",
+                                    "status" to "Slut",
                                     "winner" to lead.key
                                 ), SetOptions.merge()
                             )
                             .await()
-                        challenge.status = "finished"
+                        challenge.status = "Slut"
                     }
                 }
-            } else if (challenge.type == "time") {
+            } else if (challenge.type == "Tid") {
                 val challengeLength = challenge.settings["challengeLength"] as? Date
                 val endDate = challenge.settings["challengeLength"] as? Timestamp    // your Plant.date or other end timestamp
                 val endMillis = endDate?.toDate()!!.time
@@ -156,32 +156,32 @@ class HomeFragment : Fragment() {
                         .document(challenge.challengeId)
                         .set(
                             hashMapOf<String, Any>(
-                                "status" to "finished",
+                                "status" to "Slut",
                                 "winner" to winner!!.key
                             ), SetOptions.merge()
                         )
                         .await()
-                    challenge.status = "finished"
+                    challenge.status = "Slut"
                 }
             }
 
         }
 
-            // Fetch finished challenges where the user is a participant|
-            val finishedChallenges = db.collection("games")
+            // Fetch Slut challenges where the user is a participant|
+            val SlutUdfordringss = db.collection("games")
                 .whereArrayContains("participants", currentUserUid)
-                .whereEqualTo("status", "finished")
+                .whereEqualTo("status", "Slut")
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .await()
                 .documents.mapNotNull { document ->
-                    document.toObject(Challenge::class.java)?.copy(challengeId = document.id)
+                    document.toObject(Udfordrings::class.java)?.copy(challengeId = document.id)
                 }
 
         challengeList.clear()
-            challengeList.addAll(activeChallenges)
-            challengeList.addAll(incomingChallenges)
-            challengeList.addAll(finishedChallenges)
+            challengeList.addAll(AktivUdfordringss)
+            challengeList.addAll(KommendeUdfordringss)
+            challengeList.addAll(SlutUdfordringss)
             challengeAdapter.notifyDataSetChanged()
 
 //        } catch (e: Exception) {
@@ -189,7 +189,7 @@ class HomeFragment : Fragment() {
 //        }
     }
 
-    private suspend fun leading(challenge: Challenge): Map.Entry<String, Int>? {
+    private suspend fun leading(challenge: Udfordrings): Map.Entry<String, Int>? {
         // 1) collect the Tasks but do NOT attach any listeners
         val tasks: List<Task<QuerySnapshot>> = challenge.participants.map { uid ->
             getPlant(uid)    // already returns Task<QuerySnapshot>
@@ -221,7 +221,7 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         lifecycleScope.launch {
-//            fetchChallenges()
+//            fetchUdfordringss()
         }
     }
 

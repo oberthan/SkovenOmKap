@@ -6,7 +6,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.skovenomkap.FirebaseHelper.getUsers
-import com.example.skovenomkap.ui.home.Challenge
+import com.example.skovenomkap.ui.home.Udfordrings
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -37,7 +37,7 @@ class ChallengeDetailActivity : AppCompatActivity() {
                 .document(challengeId)
                 .get()
                 .await()
-                .toObject(Challenge::class.java)
+                .toObject(Udfordrings::class.java)
 
             if (doc != null) {
 
@@ -46,7 +46,7 @@ class ChallengeDetailActivity : AppCompatActivity() {
 
                 // suppose settings["targetSteps"] and result["stepsTaken"]
                 val settings = doc.settings as? Map<String, Any> ?: emptyMap()
-                val target = (settings["goal"] as? Number)?.toInt() ?: 0
+                val target = (settings["mål"] as? Number)?.toInt() ?: 0
 //                val done = (result["stepsTaken"] as? Number)?.toInt() ?: 0
 //                val percent = if (target > 0) (done * 100 / target).coerceIn(0, 100) else 0
 //                progressBar.progress = percent

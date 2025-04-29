@@ -59,17 +59,17 @@ class CreateChallengeActivity : AppCompatActivity() {
 
         binding.challengeTypeRadioGroup.setOnCheckedChangeListener {group, checkedId ->
             when(checkedId){
-                R.id.timeChallengeRadioButton -> {
-                    binding.timeChallengeLengthEditText.setOnClickListener {
-                        showDateTimePicker(binding.timeChallengeLengthEditText, endDateTime)
+                R.id.timeUdfordringsRadioButton -> {
+                    binding.timeUdfordringsLengthEditText.setOnClickListener {
+                        showDateTimePicker(binding.timeUdfordringsLengthEditText, endDateTime)
                     }
-                    binding.timeChallengeLengthEditText.isFocusable = false
+                    binding.timeUdfordringsLengthEditText.isFocusable = false
                     binding.settingsTextView.text = "Indtast hvornår spillet skal afsluttes"
                 }
-                R.id.goalChallengeRadioButton -> {
-                    binding.timeChallengeLengthEditText.setOnClickListener(null)
+                R.id.målUdfordringsRadioButton -> {
+                    binding.timeUdfordringsLengthEditText.setOnClickListener(null)
                     binding.settingsTextView.text = "Indtast hvor mange planter man skal opnå"
-                    binding.timeChallengeLengthEditText.isFocusable = true
+                    binding.timeUdfordringsLengthEditText.isFocusable = true
 
                 }
 
@@ -77,8 +77,8 @@ class CreateChallengeActivity : AppCompatActivity() {
         }
 
         //Implement the listeners for the views
-        binding.createChallengeButton.setOnClickListener {
-            createChallenge()
+        binding.createUdfordringsButton.setOnClickListener {
+            createUdfordrings()
         }
     }
 
@@ -105,10 +105,10 @@ class CreateChallengeActivity : AppCompatActivity() {
         EditText.text = formattedDateTime
     }
 
-    private fun createChallenge() {
+    private fun createUdfordrings() {
         val challengeType = when (binding.challengeTypeRadioGroup.checkedRadioButtonId) {
-            R.id.timeChallengeRadioButton -> "time"
-            R.id.goalChallengeRadioButton -> "goal"
+            R.id.timeUdfordringsRadioButton -> "Tid"
+            R.id.målUdfordringsRadioButton -> "mål"
             else -> {
                 Toast.makeText(this, "Please select a challenge type", Toast.LENGTH_SHORT).show()
                 return
@@ -120,8 +120,8 @@ class CreateChallengeActivity : AppCompatActivity() {
         val settings = mutableMapOf<String, Any>()
 
         when (challengeType) {
-            "time" -> {
-                val challengeLengthString = binding.timeChallengeLengthEditText.text.toString()
+            "Tid" -> {
+                val challengeLengthString = binding.timeUdfordringsLengthEditText.text.toString()
                 val challengeLength: Date = endDateTime.time
                 if (challengeLength == null) {
                     Toast.makeText(this, "Invalid challenge length", Toast.LENGTH_SHORT).show()
@@ -129,26 +129,26 @@ class CreateChallengeActivity : AppCompatActivity() {
                 }
                 settings["challengeLength"] = challengeLength
             }
-            "goal" -> {
-                val goalString = binding.timeChallengeLengthEditText.text.toString()
-                val goal = goalString.toIntOrNull()
-                if (goal == null) {
-                    Toast.makeText(this, "Invalid goal", Toast.LENGTH_SHORT).show()
+            "mål" -> {
+                val målString = binding.timeUdfordringsLengthEditText.text.toString()
+                val mål = målString.toIntOrNull()
+                if (mål == null) {
+                    Toast.makeText(this, "Invalid mål", Toast.LENGTH_SHORT).show()
                     return
                 }
-                settings["goal"] = goal
+                settings["mål"] = mål
             }
         }
 
         val currentUserUid = auth.currentUser?.uid ?: return
 
-        val challenge = Challenge(
+        val challenge = Udfordrings(
             type = challengeType,
             creatorUid = currentUserUid,
             participants = selectedFriends + currentUserUid,
             settings = settings,
             timestamp = startTime,
-            status = "incoming"
+            status = "Kommende"
         )
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -156,7 +156,7 @@ class CreateChallengeActivity : AppCompatActivity() {
                 db.collection("games")
                     .add(challenge)
                     .await()
-                Toast.makeText(this@CreateChallengeActivity, "Challenge created!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@CreateChallengeActivity, "Udfordrings created!", Toast.LENGTH_SHORT).show()
                 finish()
             } catch (e: Exception) {
                 Toast.makeText(this@CreateChallengeActivity, "Error creating challenge: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -192,13 +192,13 @@ class CreateChallengeActivity : AppCompatActivity() {
     }
 }
 
-data class Challenge(
+data class Udfordrings(
     val type: String = "",
     val creatorUid: String = "",
     val participants: List<String> = listOf(),
     val settings: Map<String, Any> = mapOf(),
     val timestamp: Date = Date(),
-    val status: String = "incoming"
+    val status: String = "Kommende"
 )
 
 data class Friend(val uid: String, val username: String)

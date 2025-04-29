@@ -1,70 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout4"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
     android:background="#F0F0F0"
-    android:gravity="center"
+    android:gravity="center|right|left"
     android:orientation="horizontal"
     android:padding="16dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_conversion_absoluteHeight="70dp"
+        tools:layout_conversion_absoluteWidth="183dp">
 
         <TextView
             android:id="@+id/challengeTypeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Challenge Type"
+            android:text="Udfordrings Type"
             android:textAppearance="?attr/textAppearanceHeadline6"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/challengeStatusTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:layout_conversion_absoluteHeight="32dp"
+            tools:layout_conversion_absoluteWidth="183dp"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="32dp" />
 
         <TextView
             android:id="@+id/challengeStatusTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Challenge Status"
+            android:text="Udfordrings Status"
             android:textAppearance="?attr/textAppearanceBody2"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/challengeTypeTextView"
+            app:layout_constraintTop_toBottomOf="@+id/challengeTypeTextView"
+            tools:layout_conversion_absoluteHeight="22dp"
+            tools:layout_conversion_absoluteWidth="134dp"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="64dp" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:id="@+id/participantsLinearLayout"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_height="wrap_content"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/linearLayout2"
+        app:layout_constraintStart_toEndOf="@id/linearLayout3"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-        <TextView
-            android:id="@+id/deltagererTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Deltagere" />
-    </LinearLayout>
-
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:gravity="center"
-        android:orientation="vertical">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_conversion_absoluteHeight="70dp"
+        tools:layout_conversion_absoluteWidth="75dp">
 
         <TextView
             android:id="@+id/yourPlantsTextView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dine planter" />
+            android:text="Dine planter"
+            app:layout_constraintBottom_toTopOf="@+id/målTextView"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:layout_conversion_absoluteHeight="19dp"
+            tools:layout_conversion_absoluteWidth="75dp"
+            tools:layout_editor_absoluteX="240dp"
+            tools:layout_editor_absoluteY="44dp" />
 
         <TextView
-            android:id="@+id/goalTextView"
-            android:layout_width="match_parent"
+            android:id="@+id/målTextView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Målet" />
+            android:text="Målet"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/yourPlantsTextView"
+            app:layout_constraintStart_toStartOf="@+id/yourPlantsTextView"
+            app:layout_constraintTop_toBottomOf="@+id/yourPlantsTextView"
+            tools:layout_conversion_absoluteHeight="19dp"
+            tools:layout_conversion_absoluteWidth="75dp"
+            tools:layout_editor_absoluteX="240dp"
+            tools:layout_editor_absoluteY="63dp" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

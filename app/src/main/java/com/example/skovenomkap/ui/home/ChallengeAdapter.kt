@@ -1,16 +1,17 @@
-// ChallengeAdapter.kt
+// UdfordringsAdapter.kt
 import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.skovenomkap.FirebaseHelper
 import com.example.skovenomkap.FirebaseHelper.getPlant
 import com.example.skovenomkap.FirebaseHelper.getUsers
 import com.example.skovenomkap.R
-import com.example.skovenomkap.ui.home.Challenge
+import com.example.skovenomkap.ui.home.Udfordrings
 import com.example.skovenomkap.ui.profile.Plant
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
@@ -18,27 +19,27 @@ import java.util.Calendar
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
-class ChallengeAdapter(
-        private val challengeList: List<Challenge>,
-        private val onClick: (Challenge) -> Unit
-    ) : RecyclerView.Adapter<ChallengeAdapter.ChallengeViewHolder>() {
+class UdfordringsAdapter(
+        private val challengeList: List<Udfordrings>,
+        private val onClick: (Udfordrings) -> Unit
+    ) : RecyclerView.Adapter<UdfordringsAdapter.UdfordringsViewHolder>() {
 
-    class ChallengeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class UdfordringsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val challengeTypeTextView: TextView = itemView.findViewById(R.id.challengeTypeTextView)
         val challengeStatusTextView: TextView = itemView.findViewById(R.id.challengeStatusTextView)
         val participantsContainer: LinearLayout = itemView.findViewById(R.id.participantsLinearLayout)
-        val goalTextView: TextView = itemView.findViewById(R.id.goalTextView)
+        val målTextView: TextView = itemView.findViewById(R.id.målTextView)
         val yourPlantsTextView: TextView = itemView.findViewById(R.id.yourPlantsTextView)
         // Add more views to display other challenge information
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChallengeViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UdfordringsViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.challenge_item, parent, false) // Create challenge_item.xml
-        return ChallengeViewHolder(itemView)
+        return UdfordringsViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: ChallengeViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: UdfordringsViewHolder, position: Int) {
         val currentItem = challengeList[position]
         holder.challengeTypeTextView.text = currentItem.type
         holder.challengeStatusTextView.text = currentItem.status
@@ -75,7 +76,7 @@ class ChallengeAdapter(
             var underTekst = ""
             var overTekst = ""
             when (currentItem.status) {
-                "active" -> {
+                "Aktiv" -> {
                     underTekst = "ud af"
                     getPlant().addOnSuccessListener { plantsSnapshot ->
                         val plants = plantsSnapshot.documents.mapNotNull { doc ->
@@ -100,14 +101,14 @@ class ChallengeAdapter(
                     }
                 }
 
-                "finished" -> {
+                "Slut" -> {
                     underTekst = "De fik først"
 
                     holder.yourPlantsTextView.text =
                         "${byId[currentItem.winner]?.getString("username")} har vundet!"
                 }
 
-                "incoming" -> {
+                "Kommende" -> {
                     underTekst = "Du skal finde"
 
                     val endDate = currentItem.timestamp    // your Plant.date or other end timestamp
@@ -125,12 +126,12 @@ class ChallengeAdapter(
             }
 
             when (currentItem.type) {
-                "goal" -> {
-                    holder.goalTextView.text =
-                        "$underTekst ${currentItem.settings.get("goal")} planter"
+                "mål" -> {
+                    holder.målTextView.text =
+                        "$underTekst ${currentItem.settings.get("mål")} planter"
                 }
 
-                "time" -> {
+                "Tid" -> {
                     val endDate =
                         currentItem.settings["challengeLength"] as? Timestamp    // your Plant.date or other end timestamp
                     val endMillis = endDate?.toDate()!!.time
@@ -145,7 +146,7 @@ class ChallengeAdapter(
                     )
 
 
-                    holder.goalTextView.text = "Slutter: ${relativeEnd}"
+                    holder.målTextView.text = "Slutter: ${relativeEnd}"
                 }
             }
         }
