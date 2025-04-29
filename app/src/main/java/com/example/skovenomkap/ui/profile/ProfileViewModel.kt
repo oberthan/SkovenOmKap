@@ -3,9 +3,11 @@ package com.example.skovenomkap.ui.profile
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
+import java.util.Date
 
 class ProfileViewModel : ViewModel() {
 
@@ -30,7 +32,8 @@ class ProfileViewModel : ViewModel() {
                 val plantList = mutableListOf<Plant>()
                 for (document in querySnapshot.documents) {
                     val plant = document.toObject(Plant::class.java)?.copy(name = document.id)
-                    plant?.let { plantList.add(it) }
+                    plant?.date = (document.get("last-seen") as? Timestamp)?.toDate()
+                    plant.let { plantList.add(it!!) }
                 }
                 _plants.value = plantList
             }

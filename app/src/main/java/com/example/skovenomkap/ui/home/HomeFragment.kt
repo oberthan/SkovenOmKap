@@ -130,7 +130,21 @@ class HomeFragment : Fragment() {
         println(activeChallenges)
         for (challenge in activeChallenges) {
             if (challenge.type == "goal") {
-
+                val lead = leading(challenge)
+                if (lead != null) {
+                    if (lead.value >= challenge.settings["goal"] as Long) {
+                        db.collection("games")
+                            .document(challenge.challengeId)
+                            .set(
+                                hashMapOf<String, Any>(
+                                    "status" to "finished",
+                                    "winner" to lead.key
+                                ), SetOptions.merge()
+                            )
+                            .await()
+                        challenge.status = "finished"
+                    }
+                }
             } else if (challenge.type == "time") {
                 val challengeLength = challenge.settings["challengeLength"] as? Date
                 val endDate = challenge.settings["challengeLength"] as? Timestamp    // your Plant.date or other end timestamp

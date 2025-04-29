@@ -23,7 +23,7 @@ class PlantAdapter(var plants: List<Plant>) : RecyclerView.Adapter<PlantAdapter.
     override fun onBindViewHolder(holder: PlantViewHolder, position: Int) {
         val plant = plants[position]
         holder.plantNameTextView.text = plant.name
-        holder.plantDescriptionTextView.text = "Du har fundet ${plant.amount},\n Den seneste blev fundet ${plant.date}"
+        holder.plantDescriptionTextView.text = "Du har fundet ${plant.amount},\n Den seneste blev fundet ${plant.date.toString()}"
     }
 
     override fun getItemCount(): Int = plants.size

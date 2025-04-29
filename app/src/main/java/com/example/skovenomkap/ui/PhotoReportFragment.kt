@@ -130,8 +130,8 @@ class PhotoReportFragment : Fragment() {
 
                     binding.plantInformationTextView.text =
                         "Dette ligner en ${jsonObject?.getString("bestMatch")}\nDen er fra slægten ${genusScientificName.toString()}\nJeg er ${
-                            firstResult?.getLong("score")?.times(100)
-                        }% sikker"
+                            firstResult?.getLong("score")
+                        } sikker"
 
                 }
             }
