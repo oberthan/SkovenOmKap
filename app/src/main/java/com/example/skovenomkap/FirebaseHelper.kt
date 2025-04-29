@@ -1,5 +1,6 @@
 package com.example.skovenomkap
 
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.auth.ktx.auth
@@ -18,9 +19,10 @@ object FirebaseHelper {
     private val auth: FirebaseAuth
         get() = Firebase.auth
 
-    suspend fun getUsers(): QuerySnapshot? {
+    fun getUsers(): Task<QuerySnapshot> {
         try {
-            return db.collection("users").get().await()
+            val users = db.collection("users").get()
+            return users
         } catch (e: Exception) {
             println("Error getting all users: $e")
             throw e
@@ -44,5 +46,18 @@ object FirebaseHelper {
             println("Error getting all users: $e")
             throw e
         }
+    }
+    fun getPlant(uid: String) : Task<QuerySnapshot> {
+        try {
+            val plants = db.collection("users").document(uid).collection("plants").get()
+            return plants
+
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+    fun getPlant() : Task<QuerySnapshot> {
+        return getPlant(auth.currentUser!!.uid)
+
     }
 }

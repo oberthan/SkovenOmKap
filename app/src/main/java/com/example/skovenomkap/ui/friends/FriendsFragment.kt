@@ -133,7 +133,7 @@ class FriendsFragment : Fragment() {
     private suspend fun fetchAllUsers() {
         try {
 //            val querySnapshot = db.collection("users").get().await()
-            val querySnapshot = FirebaseHelper.getUsers()!!
+            val querySnapshot = FirebaseHelper.getUsers().await()!!
             allUsers = querySnapshot.documents.map { document ->
                 User(document.id, document.getString("username") ?: "No Username")
             }

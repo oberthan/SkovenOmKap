@@ -94,7 +94,7 @@ class CreateChallengeActivity : AppCompatActivity() {
             TimePickerDialog(this, { _, hour, minute ->
                 dateTime.set(year, month, day, hour, minute)
                 updateDateTimeText(EditText, dateTime)
-            }, startHour, startMinute, false).show()
+            }, startHour, startMinute, true).show()
         }, startYear, startMonth, startDay).show()
     }
 
@@ -122,7 +122,7 @@ class CreateChallengeActivity : AppCompatActivity() {
         when (challengeType) {
             "time" -> {
                 val challengeLengthString = binding.timeChallengeLengthEditText.text.toString()
-                val challengeLength = endDateTime.time
+                val challengeLength: Date = endDateTime.time
                 if (challengeLength == null) {
                     Toast.makeText(this, "Invalid challenge length", Toast.LENGTH_SHORT).show()
                     return

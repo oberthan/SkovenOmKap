@@ -4,11 +4,12 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
     android:background="#F0F0F0"
+    android:gravity="center"
     android:orientation="horizontal"
     android:padding="16dp">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
@@ -27,6 +28,43 @@
             android:text="Challenge Status"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/participantsLinearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/deltagererTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Deltagere" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/yourPlantsTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dine planter" />
+
+        <TextView
+            android:id="@+id/goalTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Målet" />
+
     </LinearLayout>
 
 </LinearLayout>

@@ -11,13 +11,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.skovenomkap.databinding.FragmentProfileBinding
+import com.google.firebase.firestore.PropertyName
 import java.util.Calendar
 import java.util.Date
 
 data class Plant(
     val name: String = "",
     val amount: Int = 0,
-    val date: Date = Calendar.getInstance().time
+    var date: Date? = null
 )
 
 class ProfileFragment : Fragment() {
