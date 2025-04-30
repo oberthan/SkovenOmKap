@@ -108,7 +108,7 @@ class CreateChallengeActivity : AppCompatActivity() {
     private fun createUdfordrings() {
         val challengeType = when (binding.challengeTypeRadioGroup.checkedRadioButtonId) {
             R.id.timeUdfordringsRadioButton -> "Tid"
-            R.id.målUdfordringsRadioButton -> "mål"
+            R.id.målUdfordringsRadioButton -> "Mål"
             else -> {
                 Toast.makeText(this, "Please select a challenge type", Toast.LENGTH_SHORT).show()
                 return
@@ -129,7 +129,7 @@ class CreateChallengeActivity : AppCompatActivity() {
                 }
                 settings["challengeLength"] = challengeLength
             }
-            "mål" -> {
+            "Mål" -> {
                 val målString = binding.timeUdfordringsLengthEditText.text.toString()
                 val mål = målString.toIntOrNull()
                 if (mål == null) {

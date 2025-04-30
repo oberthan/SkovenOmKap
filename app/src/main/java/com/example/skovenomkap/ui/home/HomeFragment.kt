@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.skovenomkap.ChallengeDetailActivity
 import com.example.skovenomkap.FirebaseHelper.getPlant
+import com.example.skovenomkap.FirebaseHelper.leading
 import com.example.skovenomkap.ui.createchallenge.CreateChallengeActivity
 import com.example.skovenomkap.databinding.FragmentHomeBinding
 import com.example.skovenomkap.ui.profile.Plant
@@ -129,10 +130,10 @@ class HomeFragment : Fragment() {
                 }
         println(AktivUdfordringss)
         for (challenge in AktivUdfordringss) {
-            if (challenge.type == "mål") {
+            if (challenge.type == "Mål") {
                 val lead = leading(challenge)
                 if (lead != null) {
-                    if (lead.value >= challenge.settings["mål"] as Long) {
+                    if (lead.value >= challenge.settings["Mål"] as Long) {
                         db.collection("games")
                             .document(challenge.challengeId)
                             .set(
@@ -189,34 +190,7 @@ class HomeFragment : Fragment() {
 //        }
     }
 
-    private suspend fun leading(challenge: Udfordrings): Map.Entry<String, Int>? {
-        // 1) collect the Tasks but do NOT attach any listeners
-        val tasks: List<Task<QuerySnapshot>> = challenge.participants.map { uid ->
-            getPlant(uid)    // already returns Task<QuerySnapshot>
-        }
 
-        // 2) await until ALL of them complete successfully
-        //    Tasks.whenAllSuccess(...) itself returns a Task<List<QuerySnapshot>>
-        val snapshots: List<QuerySnapshot> =
-            Tasks.whenAllSuccess<QuerySnapshot>(tasks).await()
-
-        // 3) zip UIDs ↔ snapshots, count each user’s “recent” plants
-        val counts: Map<String, Int> = challenge.participants
-            .zip(snapshots)
-            .associate { (uid, snap) ->
-                val cnt = snap.documents
-                    .mapNotNull { doc ->
-                        doc.toObject(Plant::class.java)?.also {
-                            it.date = doc.getDate("last-seen")
-                        }
-                    }
-                    .count { it.date!! > challenge.timestamp }
-                uid to cnt
-            }
-
-        // 4) pick the max—or null if empty
-        return counts.maxByOrNull { it.value }
-    }
 
     override fun onResume() {
         super.onResume()

@@ -126,9 +126,9 @@ class UdfordringsAdapter(
             }
 
             when (currentItem.type) {
-                "mål" -> {
+                "Mål" -> {
                     holder.målTextView.text =
-                        "$underTekst ${currentItem.settings.get("mål")} planter"
+                        "$underTekst ${currentItem.settings.get("Mål")} planter"
                 }
 
                 "Tid" -> {

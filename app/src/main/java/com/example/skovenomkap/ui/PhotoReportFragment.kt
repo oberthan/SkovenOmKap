@@ -130,8 +130,8 @@ class PhotoReportFragment : Fragment() {
 
                     binding.plantInformationTextView.text =
                         "Dette ligner en ${jsonObject?.getString("bestMatch")}\nDen er fra slægten ${genusScientificName.toString()}\nJeg er ${
-                            firstResult?.getLong("score")
-                        } sikker"
+                            Math.round( firstResult?.getString("score")?.toFloat()?.times(100.0)!!)
+                        }% sikker"
 
                 }
             }
@@ -142,8 +142,8 @@ class PhotoReportFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+//        super.requireActivity().onBackPressed()
         super.onDestroyView()
-        Toast.makeText(requireContext(), "Lukkede report", Toast.LENGTH_LONG).show()
         _binding = null
         recreate(requireActivity())
     }

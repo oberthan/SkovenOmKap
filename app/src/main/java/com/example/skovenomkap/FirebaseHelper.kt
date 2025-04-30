@@ -1,6 +1,9 @@
 package com.example.skovenomkap
 
+import com.example.skovenomkap.ui.home.Udfordrings
+import com.example.skovenomkap.ui.profile.Plant
 import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.auth.ktx.auth
@@ -59,5 +62,37 @@ object FirebaseHelper {
     fun getPlant() : Task<QuerySnapshot> {
         return getPlant(auth.currentUser!!.uid)
 
+    }
+
+    suspend fun leading(challenge: Udfordrings): Map.Entry<String, Int>? {
+
+        // 4) pick the max—or null if empty
+        return ranking(challenge).maxByOrNull { it.value }
+    }
+    suspend fun ranking(challenge: Udfordrings) : Map<String, Int> {
+        // 1) collect the Tasks but do NOT attach any listeners
+        val tasks: List<Task<QuerySnapshot>> = challenge.participants.map { uid ->
+            getPlant(uid)    // already returns Task<QuerySnapshot>
+        }
+
+        // 2) await until ALL of them complete successfully
+        //    Tasks.whenAllSuccess(...) itself returns a Task<List<QuerySnapshot>>
+        val snapshots: List<QuerySnapshot> =
+            Tasks.whenAllSuccess<QuerySnapshot>(tasks).await()
+
+        // 3) zip UIDs ↔ snapshots, count each user’s “recent” plants
+        val counts: Map<String, Int> = challenge.participants
+            .zip(snapshots)
+            .associate { (uid, snap) ->
+                val cnt = snap.documents
+                    .mapNotNull { doc ->
+                        doc.toObject(Plant::class.java)?.also {
+                            it.date = doc.getDate("last-seen")
+                        }
+                    }
+                    .count { it.date!! > challenge.timestamp }
+                uid to cnt
+            }
+        return counts
     }
 }
