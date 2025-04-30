@@ -136,7 +136,7 @@ class CreateChallengeActivity : AppCompatActivity() {
                     Toast.makeText(this, "Invalid mål", Toast.LENGTH_SHORT).show()
                     return
                 }
-                settings["mål"] = mål
+                settings["Mål"] = mål
             }
         }
 
